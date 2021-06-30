@@ -74,7 +74,7 @@ const CoursePage = () => {
         try{
             if(isLoggedIn){
                 await axios.post(
-                    `${API_URL}/students/progress`,
+                    `${API_URL}/users/progress`,
                     { "duration_in_seconds": seconds },
                     {
                         headers: {

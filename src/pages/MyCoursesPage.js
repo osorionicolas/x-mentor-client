@@ -61,7 +61,7 @@ export default function CourseListPage() {
   const fetchData = async () => {
     try{
       const response = await axios(
-        `${API_URL}/students/courses?page=${page}`,
+        `${API_URL}/users/courses?page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${getTokens().access_token}`,
@@ -69,7 +69,7 @@ export default function CourseListPage() {
           }
         }
       )
-      setCourses(response.data.courses)
+      setCourses(response.data)
       setTotal(Math.ceil(response.data.total / 6))
     }
     catch(error){
@@ -95,7 +95,7 @@ export default function CourseListPage() {
 
   return (
     <div className={classes.root}>
-      {courses.length > 0 ?
+      {courses?.length > 0 ?
       <>
       <div className={classes.pagination}>
         <Pagination count={total} shape="rounded" onChange={handleChange} />
