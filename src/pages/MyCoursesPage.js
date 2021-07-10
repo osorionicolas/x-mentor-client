@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from '@material-ui/core'
 import axios from 'axios'
@@ -6,7 +6,6 @@ import Pagination from '@material-ui/lab/Pagination'
 import { API_URL } from '../environment'
 import { useHistory } from "react-router-dom";
 import { useNotification } from '../hooks/notify'
-import { AuthContext } from '../providers/AuthProvider'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,20 +53,13 @@ export default function CourseListPage() {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(10)
   const notify = useNotification()
-  const { getTokens } = useContext(AuthContext)
 
   const handleChange = (event, value) => setPage(value)
 
   const fetchData = async () => {
     try{
       const response = await axios(
-        `${API_URL}/users/courses?page=${page}`,
-        {
-          headers: {
-            Authorization: `Bearer ${getTokens().access_token}`,
-            "Id-Token": `${getTokens().id_token}`,
-          }
-        }
+        `${API_URL}/users/courses?page=${page}`
       )
       setCourses(response.data)
       setTotal(Math.ceil(response.data.total / 6))

@@ -8,9 +8,7 @@ import { Typography } from '@material-ui/core'
 
 export default function CourseModal({open, setOpen, course}) {
 
-  const handleClose = () => {
-    setOpen(false)
-  }
+  const handleClose = () => setOpen(false)
 
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">

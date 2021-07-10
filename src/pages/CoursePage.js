@@ -35,27 +35,20 @@ const CoursePage = () => {
     const classes = styles()
     const { id } = useParams()
     const notify = useNotification()
-    const { isLoggedIn, getTokens } = useContext(AuthContext)
+    const { isLoggedIn } = useContext(AuthContext)
     const [course, setCourse] = useState({})
     const startTime = useRef(0)
 
     const fetchData = async () => {
         try{
             const response = await axios(
-                `${API_URL}/courses/${id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${getTokens().access_token}`,
-                        "Id-Token": `${getTokens().id_token}`,
-                        "Content-Type": "application/json"
-                    }
-                }
+                `${API_URL}/courses/${id}`
             )
             setCourse(response.data)
         }
         catch(error){
             console.error(error)
-            notify("There was an retreiving the course", "error")
+            notify("There was an error retreiving the course", "error")
         }
     }
 
@@ -75,13 +68,7 @@ const CoursePage = () => {
             if(isLoggedIn){
                 await axios.post(
                     `${API_URL}/users/progress`,
-                    { "duration_in_seconds": seconds },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${getTokens().access_token}`,
-                            "Id-Token": `${getTokens().id_token}`,
-                        }
-                    }
+                    { "duration_in_seconds": seconds }
                 )
             }
         }
@@ -95,13 +82,7 @@ const CoursePage = () => {
         try{
             await axios.post(
                 `${API_URL}/courses/rate `,
-                { course: course.title, stars: value },
-                {
-                    headers: {
-                        Authorization: `Bearer ${getTokens().access_token}`,
-                        "Id-Token": `${getTokens().id_token}`,
-                    }
-                }
+                { course: course.title, stars: value }
             )
             notify("Rated successfully", "success")
         }

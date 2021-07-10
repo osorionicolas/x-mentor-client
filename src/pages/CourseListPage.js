@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useContext } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, Tooltip, Typography, Badge } from '@material-ui/core'
 import axios from 'axios'
@@ -9,7 +9,6 @@ import Rating from '@material-ui/lab/Rating'
 import CourseModal from '../components/CourseModal'
 import { API_URL } from '../environment'
 import { useNotification } from '../hooks/notify'
-import { AuthContext } from '../providers/AuthProvider'
 //import { useQuery, gql } from "@apollo/client"
 //import { LOAD_COURSES } from "../graphQL/Queries"
 
@@ -18,8 +17,9 @@ const useStyles = makeStyles((theme) => ({
     padding: `${theme.spacing(8)}px ${theme.spacing(18)}px`,
   },
   grid: {
-    display: 'flex',
-    justifyContent: 'space-between',
+    display: "grid",
+    gridAutoRows: "32rem",
+    gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 30rem), 1fr))",
     backgroundColor: theme.palette.background.paper,
   },
   media: {
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
   },
   tile: {
     padding: theme.spacing(5),
-    width: "30%",
   },
   description: {
     WebkitLineClamp: 3,
@@ -93,7 +92,6 @@ export default function CourseListPage() {
   const [openCourseModal, setOpenCourseModal] = useState(false)
   const [currentCourse, setCurrentCourse] = useState()
   const notify = useNotification()
-  const { getTokens } = useContext(AuthContext)
 
   /*const {error, loading, data} = useQuery(LOAD_COURSES, {
     variables: { query: query, page: page }
@@ -110,7 +108,7 @@ export default function CourseListPage() {
     const response = await axios(
       `${API_URL}/courses?q=${query.get('q')}&page=${page}`,
     )
-    setCourses(response.data)
+    setCourses(response.data.courses)
     setTotal(Math.ceil(response.data.total / 6))
   }
 
@@ -118,13 +116,7 @@ export default function CourseListPage() {
     try{
       await axios.post(
         `${API_URL}/courses/${courseId}/enroll`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${getTokens().access_token}`,
-            "Id-Token": `${getTokens().id_token}`,
-          }
-        }
+        {}
       )
       notify("Enrolled successfully", "success")
     }
@@ -163,9 +155,9 @@ export default function CourseListPage() {
       <div className={classes.pagination}>
         <Pagination count={total} shape="rounded" onChange={handleChange} />
       </div>
-      <Grid container classes={{ root: classes.grid }}>
+      <Box classes={{ root: classes.grid }}>
         {courses.map((course) => (
-          <Grid item className={classes.tile} key={course.id}>
+          <Box className={classes.tile} key={course.id}>
             <Card id={course.id}>
                 <CardActionArea onClick={() => handleCourseModal(course)}>
                     <CardContent className={classes.content}>
@@ -205,15 +197,15 @@ export default function CourseListPage() {
                   </Tooltip>
                 </CardActions>
             </Card>
-          </Grid>
+          </Box>
         ))}
-      </Grid>
+      </Box>
       </>
-    : <Grid container item classes={{ root: classes.grid }}>
+    : <Box classes={{ root: classes.grid }}>
         <Typography gutterBottom variant="h6" className={classes.title}>
           We couldn't find any courses with the specified filter
         </Typography>
-      </Grid>
+      </Box>
     }
   </div>
   <CourseModal course={currentCourse} open={openCourseModal} setOpen={setOpenCourseModal} />

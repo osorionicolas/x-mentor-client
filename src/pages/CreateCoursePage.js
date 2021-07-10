@@ -48,7 +48,7 @@ export default function CreateCourseModal({open, setOpen}) {
                     courseForm,
                     {
                         headers: {
-                            Authorization: `Bearer ${getTokens().access_token}`,
+                            Authorization: `Bearer ${getTokens().accessToken.value}`,
                             "Id-Token": `${getTokens().id_token}`,
                         }
                     }

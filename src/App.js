@@ -22,12 +22,13 @@ import {
 } from "@apollo/client"
 import { onError } from "@apollo/client/link/error"
 import { API_URL } from './environment'
+import WithAxios from "./components/WithAxios";
 
 const errorLink = onError(({ graphqlErrors, networkError}) => {
   if(graphqlErrors){
-    graphqlErrors.map(({message, location, path}) => {
+    graphqlErrors.map(({message, location, path}) => 
       alert(`Graphql error ${message}`)
-    })
+    )
   }
   if(networkError){
     alert(`Network error ${networkError}`)
@@ -40,7 +41,7 @@ const link = from([
 ])
 
 const client = new ApolloClient({
-  cache: new InMemoryCache,
+  cache: new InMemoryCache(),
   link: link
 })
 
@@ -50,21 +51,23 @@ export default function App() {
       <AuthProvider>
         <Router>
           <NotificationsProvider>
-            <Header/>
-            <Switch>
-              <Route path="/courses">
-                <CourseListPage />
-              </Route>
-              <PrivateRoute path="/my/courses">
-                <MyCoursesPage />
-              </PrivateRoute>
-              <PrivateRoute path="/course/:id">
-                <CoursePage />
-              </PrivateRoute>
-              <Route path="/">
-                <Home />
-              </Route>
-            </Switch>
+            <WithAxios>
+              <Header/>
+              <Switch>
+                <Route path="/courses">
+                  <CourseListPage />
+                </Route>
+                <PrivateRoute path="/my/courses">
+                  <MyCoursesPage />
+                </PrivateRoute>
+                <PrivateRoute path="/course/:id">
+                  <CoursePage />
+                </PrivateRoute>
+                <Route path="/">
+                  <Home />
+                </Route>
+              </Switch>
+            </WithAxios>
           </NotificationsProvider>
           <Footer />
         </Router>

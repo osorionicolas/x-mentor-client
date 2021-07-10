@@ -21,18 +21,18 @@ export default function LoginModal({settings, setSettings}) {
   const { login } = useContext(AuthContext)
 
   const [loginForm, setLoginForm] = useState({
-    email: "",
+    username: "",
     password: ""
   })
 
   const keyPress = (e) => {
-    if(e.keyCode === 13 && loginForm.email && loginForm.password){
+    if(e.keyCode === 13 && loginForm.username && loginForm.password){
       handleAuth()
     }
   }
 
   const handleAuth = async () => {
-    if(loginForm.email && loginForm.password){
+    if(loginForm.username && loginForm.password){
       try{
         const response = await axios.post(
           `${API_URL}${settings.endpoint}`,
@@ -55,16 +55,14 @@ export default function LoginModal({settings, setSettings}) {
     })
   }
 
-  const handleCancel = () => {
-    setSettings({...settings, open: false})
-  }
+  const handleCancel = () => setSettings({...settings, open: false})
 
   return (
     <Dialog open={settings.open} onClose={handleCancel} aria-labelledby="form-dialog-title">
         <DialogTitle className={classes.title}>
           {settings.title}
           {settings.mode === "login" && <Tooltip fontSize="small" classes={{ tooltip: classes.tooltip }} placement="right"
-            title="Psst... you can create an user or use this one email: codi.sipes	 / password: codi.sipes	">
+            title="Psst... you can create an user or use this one email: codi.sipes@gmail.com / password: codi.sipes	">
             <HelpIcon/>
           </Tooltip>}
         </DialogTitle>
@@ -72,7 +70,7 @@ export default function LoginModal({settings, setSettings}) {
             <TextField
                 autoFocus
                 margin="dense"
-                id="email"
+                id="username"
                 label="Email"
                 type="text"
                 onChange={handleTextField}

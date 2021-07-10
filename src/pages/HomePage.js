@@ -53,29 +53,21 @@ const HomePage = () => {
     const [interests, setInsterests] = useState([])
     const [recommendations, setRecommendations] = useState({})
     const [scores, setScores] = useState([[],[]])
-    const { isLoggedIn, getTokens } = useContext(AuthContext)
+    const { isLoggedIn } = useContext(AuthContext)
     const history = useHistory()
     const notify = useNotification()
 
     const fetchData = async () => {
         try {
             
-            axios(`${API_URL}/leaderboard`).then(response => {
+            /*axios(`${API_URL}/leaderboard`).then(response => {
                 const leadeboardData = response.data.list
                 leadeboardData.sort((a,b) => a.progress > b.progress ? -1 : 1)
                 const orderedScores = [leadeboardData.map(a => a.progress), leadeboardData.map(a => a.student)]
                 setScores(orderedScores)
-            })
-
+            })*/
             if(isLoggedIn){
-                const headers = {
-                    headers: {
-                        Authorization: `Bearer ${getTokens().access_token}`,
-                        "Id-Token": `${getTokens().id_token}`,
-                    }
-                }
-
-                axios(`${API_URL}/recommendations`, headers).then(response => {
+                axios(`${API_URL}/recommendations`).then(response => {
                     const data = response.data
                     const keys = Object.keys(data)
                     const randomObject = Math.floor(Math.random()*keys.length)
@@ -83,13 +75,11 @@ const HomePage = () => {
                     setRecommendations(courses)
                 })
 
-                const topicsResponse = await axios(`${API_URL}/topics`, headers)
-                const topics = topicsResponse.data.map(topic => topic.name)
-                setTopics(topics)
+                const topicsResponse = await axios(`${API_URL}/topics`)
+                setTopics(topicsResponse.data)
 
-                const interestsResponse = await axios(`${API_URL}/users/interests`, headers)
-                const interests = interestsResponse.data.map(interest => interest.name)
-                setInsterests(interests)
+                const interestsResponse = await axios(`${API_URL}/users/interests`)
+                setInsterests(interestsResponse.data)
             }
             else {
                 axios(`${API_URL}/visitors/recommendations`).then(response => {
@@ -117,13 +107,7 @@ const HomePage = () => {
             if(isLoggedIn){
                 await axios.post(
                     `${API_URL}/users/interests`,
-                    { "topics": interests },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${getTokens().access_token}`,
-                            "Id-Token": `${getTokens().id_token}`,
-                        }
-                    }
+                    { "topics": interests }
                 )
                 notify("Interests saved!", "success")
             }
@@ -221,7 +205,7 @@ const HomePage = () => {
             <>
             </>
             }
-            <Leaderboard scores={scores}></Leaderboard>
+            {/*<Leaderboard scores={scores}></Leaderboard>*/}
         </Grid>
     )
 }

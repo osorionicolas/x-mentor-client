@@ -164,7 +164,7 @@ export default function Header() {
       function getRealtimeData(event) {
         const data = event.data
         if(data){
-          //setNotifications(prevState => [JSON.parse(data), ...prevState])
+          setNotifications(prevState => [JSON.parse(data), ...prevState])
         }
       }
       sse.onmessage = e => getRealtimeData(e)

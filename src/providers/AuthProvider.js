@@ -3,9 +3,7 @@ import React, { createContext, useState } from "react"
 const AuthContext = createContext()
 
 const AuthProvider = ({ children }) => {
-  const getTokens = () => {
-    return JSON.parse(localStorage.getItem("token"))
-  }
+  const getTokens = () => JSON.parse(localStorage.getItem("token"))
   
   const [isLoggedIn, setIsLoggedIn] = useState(getTokens() ? true : false)
 

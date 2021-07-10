@@ -1,9 +1,8 @@
-import React, { useState, useContext, useReducer } from 'react'
+import React, { useState, useReducer } from 'react'
 import { Button, makeStyles, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Switch, Box } from '@material-ui/core'
 import axios from 'axios'
 import { API_URL } from '../environment'
 import { useNotification } from '../hooks/notify'
-import { AuthContext } from '../providers/AuthProvider'
 import ProgressBar from './ProgressBar'
 
 const useStyles = makeStyles(() => ({
@@ -33,7 +32,6 @@ export default function CreateCourseModal({open, setOpen}) {
     })
     const notify = useNotification()
     const [isContentUrl, setIsContentUrl] = useState(true)
-    const { getTokens } = useContext(AuthContext)
     const [previewData, setPreviewData] = useReducer((previewData, newData) => ({...previewData, ...newData}), {
         url: "",
         uploadProgress: 0
@@ -45,13 +43,7 @@ export default function CreateCourseModal({open, setOpen}) {
             try {
                 await axios.post(
                     `${API_URL}/courses`,
-                    courseForm,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${getTokens().access_token}`,
-                            "Id-Token": `${getTokens().id_token}`,
-                        }
-                    }
+                    courseForm
                 )
                 notify("Course created!", "success")
                 resetForm()
@@ -77,7 +69,10 @@ export default function CreateCourseModal({open, setOpen}) {
             content: ""
         })
         setIsContentUrl(true)
-        setPreviewData({})
+        setPreviewData({
+            url: "",
+            uploadProgress: 0
+        })
     }
 
     const handleTextField = (event) => {
