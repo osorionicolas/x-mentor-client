@@ -75,16 +75,11 @@ const HomePage = () => {
                     setRecommendations(courses)
                 })
 
-                const topicsResponse = await axios(`${API_URL}/topics`)
-                setTopics(topicsResponse.data)
-
-                const interestsResponse = await axios(`${API_URL}/users/interests`)
-                setInsterests(interestsResponse.data)
+                axios(`${API_URL}/topics`).then(topicsResponse => setTopics(topicsResponse.data))
+                axios(`${API_URL}/users/interests`).then(interestsResponse => setInsterests(interestsResponse.data))
             }
             else {
-                axios(`${API_URL}/visitors/recommendations`).then(response => {
-                    setRecommendations(response.data.discover)
-                })
+                axios(`${API_URL}/visitors/recommendations`).then(response => setRecommendations(response.data.discover))
             }
             
         }
@@ -103,17 +98,12 @@ const HomePage = () => {
     }
 
     const handleInterestsSubmit = async () => {
-        try{
-            if(isLoggedIn){
-                await axios.post(
-                    `${API_URL}/users/interests`,
-                    { "topics": interests }
-                )
-                notify("Interests saved!", "success")
-            }
-        }
-        catch(error){
-            console.log(error)          
+        if(isLoggedIn){
+            await axios.post(
+                `${API_URL}/users/interests`,
+                { "topics": interests }
+            ).catch(error => console.log(error))
+            notify("Interests saved!", "success")
         }
     }
 

@@ -57,14 +57,9 @@ export default function CourseListPage() {
   const handleChange = (event, value) => setPage(value)
 
   const fetchData = async () => {
-    try{
-      const response = await axios(
-        `${API_URL}/users/courses?page=${page}`
-      )
-      setCourses(response.data)
-      setTotal(Math.ceil(response.data.total / 6))
-    }
-    catch(error){
+    const response = await axios(
+      `${API_URL}/users/courses?page=${page}`
+    ).catch(error => {
       const status = error.response && error.response.status
       if(status === 401) {
         notify("Session Expired", "warning")
@@ -74,7 +69,9 @@ export default function CourseListPage() {
       else {
         notify("There was an error retreiving courses", "error")
       }
-    }
+    })
+    setCourses(response.data)
+    setTotal(Math.ceil(response.data.total / 6))
   }
 
   const watchCourse = (courseId) => {
@@ -94,21 +91,21 @@ export default function CourseListPage() {
       </div>
       <Grid container classes={{ root: classes.grid }}>
         {courses.map((course) => (
-          <Grid item className={classes.tile} key={course.id}>
-              <Card id={course.id}>
-                  <CardActionArea onClick={(e) => watchCourse(e.target.closest(".MuiCard-root").id)}>
-                      <CardContent className={classes.content}>
-                          <Typography gutterBottom variant="h6" className={classes.title}>
-                            {course.title}
-                          </Typography>
-                          <CardMedia
-                            className={classes.media}
-                            image={course.preview}
-                            title={course.title}
-                          />
-                      </CardContent>
-                  </CardActionArea>
-              </Card>
+          <Grid item className={classes.tile} key={course.uuid}>
+            <Card id={course.uuid}>
+              <CardActionArea onClick={() => watchCourse(course.uuid)}>
+                <CardContent className={classes.content}>
+                  <Typography gutterBottom variant="h6" className={classes.title}>
+                    {course.title}
+                  </Typography>
+                  <CardMedia
+                    className={classes.media}
+                    image={course.preview}
+                    title={course.title}
+                  />
+                </CardContent>
+              </CardActionArea>
+            </Card>
           </Grid>
         ))}
       </Grid>

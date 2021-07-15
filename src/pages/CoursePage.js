@@ -40,23 +40,21 @@ const CoursePage = () => {
     const startTime = useRef(0)
 
     const fetchData = async () => {
-        try{
-            const response = await axios(
-                `${API_URL}/courses/${id}`
-            )
-            setCourse(response.data)
-        }
-        catch(error){
+        const response = await axios(
+            `${API_URL}/courses/${id}`
+        ).catch(error => {
             console.error(error)
             notify("There was an error retreiving the course", "error")
-        }
+        })
+        setCourse(response.data)
+
     }
 
     const Content = () => {
         if(course.content){
-            if(course.content.startsWith("data:image")) return <img alt="content" className={classes.content} src={`${course.content}`}></img>
-            else if(course.content.startsWith("data:video")) return <video alt="content" className={classes.content} src={`${course.content}`} controls></video>
-            else return <iframe title="Content" className={classes.content} src={`${course.content}`}></iframe>
+            if(course.content.url.startsWith("data:image")) return <img alt="content" className={classes.content} src={`${course.content.url}`}></img>
+            else if(course.content.url.startsWith("data:video")) return <video alt="content" className={classes.content} src={`${course.content.url}`} controls></video>
+            else return <iframe title="Content" className={classes.content} src={`${course.content.url}`}></iframe>
         }
         else{
             return <img alt="preview" className={classes.content} src={`${course.preview}`}></img>
@@ -64,31 +62,23 @@ const CoursePage = () => {
     }
     
     const updateWatchTime = async (seconds) => {
-        try{
-            if(isLoggedIn){
-                await axios.post(
-                    `${API_URL}/users/progress`,
-                    { "duration_in_seconds": seconds }
-                )
-            }
-        }
-        catch(error){
-            console.log(error)          
+        if(isLoggedIn){
+            await axios.post(
+                `${API_URL}/users/progress`,
+                { "duration_in_seconds": seconds }
+            ).catch(error => console.log(error))
         }
     }
 
     const rate = async (event) => {
         const value = event.target.value
-        try{
-            await axios.post(
-                `${API_URL}/courses/rate `,
-                { course: course.title, stars: value }
-            )
-            notify("Rated successfully", "success")
-        }
-        catch(error){
+        await axios.post(
+            `${API_URL}/courses/rate `,
+            { course: course.title, stars: value }
+        ).catch(error => {
             notify("You have already rated the course!", "error")
-        }
+        })
+        notify("Rated successfully", "success")
     }
 
     useEffect(() => {

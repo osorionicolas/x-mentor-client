@@ -9,6 +9,7 @@ import Home from './pages/HomePage'
 import CoursePage from './pages/CoursePage'
 import CourseListPage from './pages/CourseListPage'
 import MyCoursesPage from './pages/MyCoursesPage'
+import NotFoundPage from './pages/NotFoundPage'
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { NotificationsProvider } from "./providers/NotificationsProvider";
@@ -54,6 +55,9 @@ export default function App() {
             <WithAxios>
               <Header/>
               <Switch>
+                <Route path="/not-found">
+                  <NotFoundPage />
+                </Route>
                 <Route path="/courses">
                   <CourseListPage />
                 </Route>

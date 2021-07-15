@@ -45,13 +45,7 @@ export default function CreateCourseModal({open, setOpen}) {
             try {
                 await axios.post(
                     `${API_URL}/courses`,
-                    courseForm,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${getTokens().accessToken.value}`,
-                            "Id-Token": `${getTokens().id_token}`,
-                        }
-                    }
+                    courseForm
                 )
                 notify("Course created!", "success")
                 resetForm()

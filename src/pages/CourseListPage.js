@@ -157,8 +157,8 @@ export default function CourseListPage() {
       </div>
       <Box classes={{ root: classes.grid }}>
         {courses.map((course) => (
-          <Box className={classes.tile} key={course.id}>
-            <Card id={course.id}>
+          <Box className={classes.tile} key={course.uuid}>
+            <Card id={course.uuid}>
                 <CardActionArea onClick={() => handleCourseModal(course)}>
                     <CardContent className={classes.content}>
                       <Badge classes={{root: classes.topic, badge: classes.topicBadge}} badgeContent={course.topic} color="secondary"></Badge>
